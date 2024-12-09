@@ -51,6 +51,8 @@
                             {% if current_user.is_authenticated %}
                                 {{ render_form(form, novalidate=True) }}
                                 {{ ckeditor.load(pkg_type='basic') }}
+                            {% elif not current_user.is_authenticated %}
+                                <h4>You need to login to post a comment.</h4>
                             {% endif %}
                         </div>
 

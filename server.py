@@ -13,12 +13,13 @@ from flask_ckeditor import CKEditor
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 # from flask_gravatar import Gravatar
+import os
 
 
 # APP CONFIG BELOW
 app = Flask(__name__)
 app.config['SECRET_KEY'] = token_hex(30)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blogster.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI', 'sqlite:///blogster.db')
 current_date = datetime.now()
 
 bootstrap = Bootstrap5()
@@ -117,8 +118,8 @@ def contact():
         message_to_send = f"Subject:Contact Request received\n\nYour name: {name}\nYour Phone: {phone}\nMessage: {message}"
         with SMTP('smtp.gmail.com') as connection:
             connection.starttls()
-            connection.login(user='sandeeptest0808@gmail.com', password='dckmudfxtsslhqci')
-            connection.sendmail(from_addr='sandeeptest0808@gmail.com', to_addrs=email, msg=message_to_send)
+            connection.login(user=os.environ.get("SMTP_USER"), password=os.environ.get("SMTP_PASSWORD"))
+            connection.sendmail(from_addr=os.environ.get("SMTP_USER"), to_addrs=email, msg=message_to_send)
         return render_template('contact.html', year=current_date.year, form=form, msg_sent=True)
     return render_template('contact.html', year=datetime.now().year, form=form)
 
@@ -249,4 +250,4 @@ def delete(post_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5080, host='0.0.0.0')
+    app.run(debug=False, port=5080, host='0.0.0.0')
