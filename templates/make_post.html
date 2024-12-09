@@ -1,0 +1,41 @@
+{% from 'bootstrap5/form.html' import render_form %}
+{% include 'header.html' %}
+
+        <!-- Page Header-->
+        <header class="masthead" style="background-image: url({{url_for('static',filename='assets/img/post-bg.jpg')}})">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-10">
+                        <div class="page-heading">
+                            {% if editing %}
+                                <h1>Let's make this post better.</h1>
+                                <span class="subheading"></span>
+                            {% else %}
+                                <h1>Let's write something awesome.</h1>
+                                <span class="subheading"></span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Main Content-->
+        <main class="mb-4">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        {% if not editing %}
+                            <h3>New Post!</h3>
+                        {% else %}
+                            <h3>Editing</h3>
+                        {% endif %}
+                        <div class="my-5">
+                            {{ render_form(form, novalidate=true) }}
+                            {{ ckeditor.load(pkg_type=full) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- Footer-->
+{% include 'footer.html' %}

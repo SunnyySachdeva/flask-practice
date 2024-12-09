@@ -1,0 +1,63 @@
+{% include 'header.html' %}
+{% from 'bootstrap5/form.html' import render_form %}
+        <!-- Page Header-->
+        <header class="masthead" style="background-image: url({{post.img_url}})">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="post-heading">
+                            <h1>{{post.title}}</h1>
+                            <h2 class="subheading">{{ post.subtitle }}</h2>
+                            <span class="meta">
+                                Posted by
+                                <a href="#!"><u>{{ post.user.first_name }} {{ post.user.last_name }}</u></a>
+                                on <u>{{post.date}}</u>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Post Content-->
+        <article class="mb-4">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7 border border-light">
+                        {% if post.edit_date %}
+                            <p>Last Updated on: <u>{{ post.edit_date }}</u></p>
+                        {% endif %}
+                        {{ post.content | safe }}
+                        <br><br><br><br><br>
+                        {% if current_user.is_authenticated and current_user.id in [1,2,3] %}
+                            <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="{{ url_for('update', post_id=post.id) }}">Update Post *</a></div>
+                        {% endif %}
+                        <hr>
+                        <div class="border p-3" style="border-radius: 5px">
+                            <h3>Comments</h3>
+                            {% if post.comments == [] %}
+                            <p>No Comments posted yet.</p>
+                            {% endif %}
+                            <ul class="list-unstyled ml-5">
+                                {% for comment in post.comments %}
+                                <li class="border text-bg-light p-2" style="border-radius:5px">
+                                    <div class="text-bg pt-0 mt-0" ><em>{{ comment.comment_text | safe }}</em></div>
+                                    <div class="font-weight-light" style="margin-left: 5px; margin-top: -10px; font-size: 14px; font-weight: lighter">
+                                        posted by: <u>{{ comment.user.first_name }}</u>
+                                    </div>
+                                </li>
+                                <hr class="light-green">
+                                {% endfor %}
+                            </ul>
+                            {% if current_user.is_authenticated %}
+                                {{ render_form(form, novalidate=True) }}
+                                {{ ckeditor.load(pkg_type='basic') }}
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </article>
+        <!-- Footer-->
+{% include 'footer.html' %}
